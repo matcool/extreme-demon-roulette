@@ -5,9 +5,11 @@ let currentDemons = [];
 let currentDemon = 0;
 let currentPercent = 0;
 
-function getDemonHTML(demon, currentPercent=1) {
-    return `
-<div class="box">
+let lastCheckboxes = [true, true];
+
+function getDemonHTML(demon, currentPercent=1, animation='fadeInUpBig') {
+    return `\
+<div class="box ${animation ? 'animate__animated animate__' + animation : ''}">
     <div class="columns is-1">
         <div class="column is-narrow">
             <figure class="image">
@@ -85,12 +87,13 @@ function nextDemon(first=false) {
             });
             return;
         }
+        domId('temp-column').remove();
         let title = domId('current-title');
-        title.textContent += ` (${percent}%)`;
-        title.id = null;
+        title.insertAdjacentHTML('beforeend', `<span class="percent ml-1"> ${percent}%</span>`);
+        title.removeAttribute('id');
         currentPercent = percent + 1;
         currentDemon++;
-        domId('temp-column').remove();
+
         if (percent >= 100) {
             giveUp(false);
             return;
@@ -104,20 +107,44 @@ function nextDemon(first=false) {
     });
 }
 
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function giveUp(failed=true) {
-    domId('demons').insertAdjacentHTML('beforeend', `
-    <div class="box has-text-centered">
-        <h1 class="title">Results</h1>
-        <div class="content is-medium">
-            <p>
-            Number of demons: ${currentDemon} <br>
-            Highest %: ${currentPercent - 1}%
-            </p>
-            <p>Status: <span id="status-text" style="color: ${failed ? 'red' : 'green'};">${failed ? 'FAILED' : 'GG'}</span></p>
-        </div>
+    domId('current-title').removeAttribute('id');
+    domId('demons').insertAdjacentHTML('beforeend', `\
+<div class="box has-text-centered animate__animated animate__fadeInUp">
+    <h1 class="title">Results</h1>
+    <div class="content is-medium">
+        <p>
+        Number of demons: ${currentDemon} <br>
+        Highest percent: ${currentPercent - 1}%
+        </p>
+        <p>Status: <span id="status-text" style="color: ${failed ? 'red' : 'green'};">${failed ? 'FAILED' : 'GG'}</span></p>
+        <a class="button is-info" id="btn-show-demons">Show remaining demons</a>
     </div>
-    `);
+</div>`);
+
     domId('btn-start').removeAttribute('disabled');
+    
+    domId('btn-show-demons').addEventListener('click', async e => {
+        domId('btn-show-demons').setAttribute('disabled', true);
+        for (let i = currentDemon + 1; i < currentDemons.length; ++i) {
+            domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i], 0, false));
+
+            let percent = currentPercent + i - currentDemon;
+
+            domId('temp-column').remove();
+            let title = domId('current-title');
+            title.insertAdjacentHTML('beforeend', `<span class="percent ml-1" style="color: #e0e0e0; font-size: 0.6em !important;"> ${percent}%</span>`);
+            title.removeAttribute('id');
+
+            if (percent >= 100) {
+                break;
+            }
+        }
+    });
 }
 
 domId('btn-start').addEventListener('click', async e => {
@@ -141,12 +168,14 @@ domId('btn-start').addEventListener('click', async e => {
 
     domId('demons').textContent = '';
 
-    if (!currentDemons.length) {
-        if (mainList)
-            currentDemons = currentDemons.concat(await getDemons(75, 0)); // 1 - 75
-        if (extendedList)
-            currentDemons = currentDemons.concat(await getDemons(75, 75)); // 76 - 150
+    if (!currentDemons.length || mainList !== lastCheckboxes[0] || extendedList !== lastCheckboxes[1]) {
+        currentDemons = [
+            ...(mainList ? await getDemons(75, 0) : []), // 1 - 75
+            ...(extendedList ? await getDemons(75, 75) : []), // 76 - 150
+        ];
     }
+
+    lastCheckboxes = [mainList, extendedList];
 
     currentDemons.shuffle();
     nextDemon(true);
