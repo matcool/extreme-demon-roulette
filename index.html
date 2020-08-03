@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Extreme Demon Roulette</title>
+        <link rel="icon" type="image/png" href="https://gdbrowser.com/difficulty/demon-extreme-featured.png" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <style>
+            .yt-thumb {
+                width: 196px !important;
+                height: 110px !important;
+            }
+
+            .demon-face {
+                width: 64px;
+                height: 64px;
+            }
+
+            #status-text {
+                font-size: 1.3em;
+                font-weight: 500;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="columns is-centered is-vcentered mt-2">
+            <div class="column is-narrow">
+                <label class="checkbox is-unselectable">
+                    <input id="chk-main-list" type="checkbox" checked>
+                    Main list
+                </label>
+                <br>
+                <label class="checkbox is-unselectable">
+                    <input id="chk-extended-list" type="checkbox" checked>
+                    Extended list
+                </label>
+            </div>
+            <div class="column is-half has-text-centered">
+                <h1 class="title">Extreme Demon Roulette</h1>
+            </div>
+            <div class="column is-narrow has-text-right">
+                <a id="btn-start" class="button is-success">Start</a>
+            </div>
+        </div>
+
+        <div id="demons" class="container mt-6">
+        </div>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+        <script src="https://unpkg.com/bulma-toast@2.0.1/dist/bulma-toast.min.js" defer></script>
+        <script src="main.js" defer></script>
+    </body>
+
+</html>
