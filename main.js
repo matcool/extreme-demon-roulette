@@ -77,6 +77,13 @@ Object.defineProperty(Array.prototype, 'shuffle', {
     }
 });
 
+function clickEvent(element, listener) {
+    element.addEventListener('click', e => {
+        if (element.hasAttribute('disabled')) return;
+        listener(element, e);
+    });
+}
+
 function nextDemon(first=false) {
     if (!first) {
         let percent = Number(getInput('ipt-percent'));
@@ -128,8 +135,8 @@ function giveUp(failed=true) {
 
     domId('btn-start').removeAttribute('disabled');
     
-    domId('btn-show-demons').addEventListener('click', async e => {
-        domId('btn-show-demons').setAttribute('disabled', true);
+    clickEvent(domId('btn-show-demons'), async btn => {
+        btn.setAttribute('disabled', true);
         for (let i = currentDemon + 1; i < currentDemons.length; ++i) {
             domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i], 0, false));
 
@@ -147,8 +154,7 @@ function giveUp(failed=true) {
     });
 }
 
-domId('btn-start').addEventListener('click', async e => {
-    const btn = domId('btn-start');
+clickEvent(domId('btn-start'), async btn => {
     btn.setAttribute('disabled', true);
 
     const mainList = getCheckbox('chk-main-list');
