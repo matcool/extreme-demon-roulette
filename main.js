@@ -1,5 +1,5 @@
-const proxy = 'https://cors-anywhere.herokuapp.com/';
-const pointercrate = 'https://pointercrate.com/api/v1/demons/';
+// free .tk domain I dont care im poor
+const api = 'https://matcool.tk';
 
 let currentDemons = [];
 let currentDemon = 0;
@@ -35,25 +35,6 @@ function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
         </div>
     </div>
 </div>`;
-}
-
-async function getDemons(limit = 75, after = 0) {
-    const response = await axios.get(proxy + pointercrate + `?limit=${limit}&after=${after}`);
-    return response.data.map(demon => {
-        let video = demon.video;
-        if (video && video.includes('youtube')) {
-            // hacky but whatever
-            video = video.substring(video.length - 11, video.length);
-        } else {
-            video = null;
-        }
-        return {
-            position: demon.position,
-            name: demon.name,
-            publisher: demon.publisher.name,
-            video
-        }
-    });
 }
 
 function domId(id) {
@@ -190,9 +171,9 @@ clickEvent(domId('btn-start'), async btn => {
 
     if (!currentDemons.length || mainList !== lastCheckboxes[0] || extendedList !== lastCheckboxes[1] || legacyList !== lastCheckboxes[2]) {
         currentDemons = [
-            ...(mainList ? await getDemons(75, 0) : []), // 1 - 75
-            ...(extendedList ? await getDemons(75, 75) : []), // 76 - 150
-            ...(legacyList ? (await getDemons(100, 150)).concat(await getDemons(100, 250)) : []) // two requests ☠️
+            ...(mainList ? (await axios.get(api + '/mainlist')).data : []), // 1 - 75
+            ...(extendedList ? (await axios.get(api + '/extendedlist')).data : []), // 76 - 150
+            ...(legacyList ? (await axios.get(api + '/legacylist')).data : [])
         ];
     }
 
