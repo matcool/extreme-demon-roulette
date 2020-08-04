@@ -168,7 +168,6 @@ function giveUp(failed = true) {
 }
 
 clickEvent(domId('btn-start'), async btn => {
-    return;
     btn.setAttribute('disabled', true);
 
     const mainList = getCheckbox('chk-main-list');
