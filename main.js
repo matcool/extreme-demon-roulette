@@ -5,7 +5,7 @@ let currentDemons = [];
 let currentDemon = 0;
 let currentPercent = 0;
 
-let lastCheckboxes = [true, true];
+let lastCheckboxes = [true, true, false];
 
 feather.replace(); // for the iconset
 
@@ -172,8 +172,9 @@ clickEvent(domId('btn-start'), async btn => {
 
     const mainList = getCheckbox('chk-main-list');
     const extendedList = getCheckbox('chk-extended-list');
+    const legacyList = getCheckbox('chk-legacy-list');
 
-    if (!mainList && !extendedList) {
+    if (!mainList && !extendedList && !legacyList) {
         bulmaToast.toast({
             message: 'Please select atleast one of the checkboxes',
             type: 'is-danger',
@@ -187,14 +188,15 @@ clickEvent(domId('btn-start'), async btn => {
 
     domId('demons').textContent = '';
 
-    if (!currentDemons.length || mainList !== lastCheckboxes[0] || extendedList !== lastCheckboxes[1]) {
+    if (!currentDemons.length || mainList !== lastCheckboxes[0] || extendedList !== lastCheckboxes[1] || legacyList !== lastCheckboxes[2]) {
         currentDemons = [
             ...(mainList ? await getDemons(75, 0) : []), // 1 - 75
             ...(extendedList ? await getDemons(75, 75) : []), // 76 - 150
+            ...(legacyList ? (await getDemons(100, 150)).concat(await getDemons(100, 250)) : []) // two requests ☠️
         ];
     }
 
-    lastCheckboxes = [mainList, extendedList];
+    lastCheckboxes = [mainList, extendedList, legacyList];
 
     currentDemons.shuffle();
     nextDemon(true);
