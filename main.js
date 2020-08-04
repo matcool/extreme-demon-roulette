@@ -119,7 +119,8 @@ async function sleep(ms) {
 }
 
 function giveUp(failed=true) {
-    domId('current-title').removeAttribute('id');
+    if (failed)
+        domId('current-title').removeAttribute('id');
     domId('demons').insertAdjacentHTML('beforeend', `\
 <div class="box has-text-centered animate__animated animate__fadeInUp">
     <h1 class="title">Results</h1>
@@ -128,30 +129,33 @@ function giveUp(failed=true) {
         Number of demons: ${currentDemon} <br>
         Highest percent: ${currentPercent - 1}%
         </p>
-        <p>Status: <span id="status-text" style="color: ${failed ? 'red' : 'green'};">${failed ? 'FAILED' : 'GG'}</span></p>
+        <p><span id="status-text" style="color: ${failed ? 'red' : 'green'};">${failed ? 'FAILED' : 'GG'}</span></p>
         <a class="button is-info" id="btn-show-demons">Show remaining demons</a>
     </div>
 </div>`);
 
     domId('btn-start').removeAttribute('disabled');
+    if (!failed) {
+        domId('btn-show-demons').remove();
+    } else {
+        clickEvent(domId('btn-show-demons'), async btn => {
+            btn.setAttribute('disabled', true);
+            for (let i = currentDemon + 1; i < currentDemons.length; ++i) {
+                domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i], 0, false));
     
-    clickEvent(domId('btn-show-demons'), async btn => {
-        btn.setAttribute('disabled', true);
-        for (let i = currentDemon + 1; i < currentDemons.length; ++i) {
-            domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i], 0, false));
-
-            let percent = currentPercent + i - currentDemon;
-
-            domId('temp-column').remove();
-            let title = domId('current-title');
-            title.insertAdjacentHTML('beforeend', `<span class="percent ml-1" style="color: #e0e0e0; font-size: 0.6em !important;"> ${percent}%</span>`);
-            title.removeAttribute('id');
-
-            if (percent >= 100) {
-                break;
+                let percent = currentPercent + i - currentDemon;
+    
+                domId('temp-column').remove();
+                let title = domId('current-title');
+                title.insertAdjacentHTML('beforeend', `<span class="percent ml-1" style="color: #e0e0e0; font-size: 0.6em !important;"> ${percent}%</span>`);
+                title.removeAttribute('id');
+    
+                if (percent >= 100) {
+                    break;
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 clickEvent(domId('btn-start'), async btn => {
