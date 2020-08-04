@@ -7,7 +7,9 @@ let currentPercent = 0;
 
 let lastCheckboxes = [true, true];
 
-function getDemonHTML(demon, currentPercent=1, animation='fadeInUpBig') {
+feather.replace(); // for the iconset
+
+function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
     return `\
 <div class="box ${animation ? 'animate__animated animate__' + animation : ''}">
     <div class="columns is-1">
@@ -22,7 +24,7 @@ function getDemonHTML(demon, currentPercent=1, animation='fadeInUpBig') {
         </div>
         <div id="temp-column" class="column is-narrow">
             <input id="ipt-percent" class="input" type="number" placeholder="Atleast ${currentPercent}%">
-            <div class="columns is-1">
+            <div class="columns is-1 mt-1">
                 <div class="column">
                     <a class="button is-success" id="btn-done">Done</a>
                 </div>
@@ -35,7 +37,7 @@ function getDemonHTML(demon, currentPercent=1, animation='fadeInUpBig') {
 </div>`;
 }
 
-async function getDemons(limit=75, after=0) {
+async function getDemons(limit = 75, after = 0) {
     const response = await axios.get(proxy + pointercrate + `?limit=${limit}&after=${after}`);
     return response.data.map(demon => {
         let video = demon.video;
@@ -68,7 +70,7 @@ function getInput(id) {
 
 // https://stackoverflow.com/a/6274381/9124836
 Object.defineProperty(Array.prototype, 'shuffle', {
-    value: function() {
+    value: function () {
         for (let i = this.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [this[i], this[j]] = [this[j], this[i]];
@@ -84,12 +86,19 @@ function clickEvent(element, listener) {
     });
 }
 
-function nextDemon(first=false) {
+function nextDemon(first = false) {
     if (!first) {
         let percent = Number(getInput('ipt-percent'));
         if (percent < currentPercent) {
             bulmaToast.toast({
                 message: `Your % needs to be atleast ${currentPercent}%, otherwise give up`,
+                type: 'is-warning'
+            });
+            return;
+        }
+        if (percent > 100) {
+            bulmaToast.toast({
+                message: 'really',
                 type: 'is-warning'
             });
             return;
@@ -118,7 +127,7 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function giveUp(failed=true) {
+function giveUp(failed = true) {
     if (failed)
         domId('current-title').removeAttribute('id');
     domId('demons').insertAdjacentHTML('beforeend', `\
@@ -142,14 +151,14 @@ function giveUp(failed=true) {
             btn.setAttribute('disabled', true);
             for (let i = currentDemon + 1; i < currentDemons.length; ++i) {
                 domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i], 0, false));
-    
+
                 let percent = currentPercent + i - currentDemon;
-    
+
                 domId('temp-column').remove();
                 let title = domId('current-title');
                 title.insertAdjacentHTML('beforeend', `<span class="percent ml-1" style="color: #e0e0e0; font-size: 0.6em !important;"> ${percent}%</span>`);
                 title.removeAttribute('id');
-    
+
                 if (percent >= 100) {
                     break;
                 }
@@ -189,4 +198,17 @@ clickEvent(domId('btn-start'), async btn => {
 
     currentDemons.shuffle();
     nextDemon(true);
+});
+
+// For closing modals
+document.addEventListener('click', e => {
+    let modal = document.querySelector('.modal.is-active');
+    if (modal && !e.target.closest('.modal.is-active .modal-content')) {
+        modal.classList.remove('is-active');
+    }
+})
+
+domId('btn-help').addEventListener('click', e => {
+    domId('help-modal').classList.add('is-active');
+    e.stopPropagation();
 });

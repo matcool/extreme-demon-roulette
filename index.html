@@ -32,7 +32,8 @@
 
         <meta property="og:type" content="website">
         <meta property="og:title" content="Extreme Demon Roulette" />
-        <meta property="og:description" content="Small and simple website that generates a random list of extreme demons." />
+        <meta property="og:description"
+            content="Small and simple website that generates a random list of extreme demons." />
         <meta property="og:url" content="https://matcool.github.io/extreme-demon-roulette/" />
     </head>
 
@@ -50,10 +51,27 @@
                 </label>
             </div>
             <div class="column is-half has-text-centered">
-                <h1 class="title">Extreme Demon Roulette</h1>
+                <h1 class="title">Extreme Demon Roulette 
+                    <span id="btn-help" class="icon is-small"><i data-feather="help-circle"></i></span></h1>
+
             </div>
             <div class="column is-narrow has-text-right">
                 <a id="btn-start" class="button is-success">Start</a>
+            </div>
+        </div>
+
+        <div id="help-modal" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.3s;">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <div class="content">
+                        <p>
+                            The extreme demon roulette is a challenge where you must go through
+                            as many demons as possible, with the challenge ending when you get 100% or give up.
+                        </p>
+                        <p>Idea by <a href="https://youtu.be/nv_9FkfGRsc">npesta</a>, site by <a href="https://github.com/matcool">me</a></p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -66,6 +84,7 @@
 
         <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
         <script src="https://unpkg.com/bulma-toast@2.0.1/dist/bulma-toast.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
         <script src="main.js" defer></script>
     </body>
 
