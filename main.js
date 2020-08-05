@@ -7,6 +7,8 @@ let currentPercent = 0;
 
 let lastCheckboxes = [true, true, false];
 
+let preventLeaving = false;
+
 feather.replace(); // for the iconset
 
 function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
@@ -109,6 +111,7 @@ async function sleep(ms) {
 }
 
 function giveUp(failed = true) {
+    preventLeaving = false;
     if (failed)
         domId('current-title').removeAttribute('id');
     domId('demons').insertAdjacentHTML('beforeend', `\
@@ -150,6 +153,8 @@ function giveUp(failed = true) {
 
 clickEvent(domId('btn-start'), async btn => {
     btn.setAttribute('disabled', true);
+
+    preventLeaving = true;
 
     const mainList = getCheckbox('chk-main-list');
     const extendedList = getCheckbox('chk-extended-list');
@@ -194,4 +199,11 @@ document.addEventListener('click', e => {
 domId('btn-help').addEventListener('click', e => {
     domId('help-modal').classList.add('is-active');
     e.stopPropagation();
+});
+
+window.addEventListener('beforeunload', e => {
+    if (preventLeaving) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
 });
