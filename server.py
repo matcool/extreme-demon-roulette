@@ -62,7 +62,7 @@ async def legacy_list(request):
         await update_cache()
     if not len(cache):
         return web.Response(status=500)
-    return json_response(cache[150:])
+    return json_response(cache[150:-1]) # i really hope god eater stays in last place
 
 app = web.Application()
 
@@ -81,4 +81,4 @@ for route in list(app.router.routes()):
     print(route)
     cors.add(route)
 
-web.run_app(app)
+web.run_app(app, port=4746)
