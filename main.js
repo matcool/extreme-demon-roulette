@@ -101,6 +101,9 @@ function nextDemon(first = false) {
     domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[currentDemon], currentPercent));
     domId('btn-done').addEventListener('click', e => nextDemon());
     domId('btn-give-up').addEventListener('click', e => {
+        if (!window.confirm('u sure?')) {
+            return;
+        }
         domId('temp-column').remove();
         giveUp();
     });
