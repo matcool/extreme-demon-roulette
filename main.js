@@ -4,6 +4,7 @@ const api = 'https://matcool.tk';
 let currentDemons = [];
 let currentDemon = 0;
 let currentPercent = 0;
+let playing = false;
 
 let lastCheckboxes = [true, true, false];
 
@@ -101,7 +102,7 @@ function nextDemon(first = false) {
     domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[currentDemon], currentPercent));
     domId('btn-done').addEventListener('click', e => nextDemon());
     domId('btn-give-up').addEventListener('click', e => {
-        if (!window.confirm('u sure?')) {
+        if (!window.confirm('Are you sure?')) {
             return;
         }
         domId('temp-column').remove();
@@ -114,9 +115,12 @@ async function sleep(ms) {
 }
 
 function giveUp(failed = true) {
+    playing = false;
     preventLeaving = false;
+
     if (failed)
         domId('current-title').removeAttribute('id');
+
     domId('demons').insertAdjacentHTML('beforeend', `\
 <div class="box has-text-centered animate__animated animate__fadeInUp">
     <h1 class="title">Results</h1>
@@ -130,7 +134,10 @@ function giveUp(failed = true) {
     </div>
 </div>`);
 
-    domId('btn-start').removeAttribute('disabled');
+    let btnStart = domId('btn-start');
+    btnStart.classList.add('is-success');
+    btnStart.classList.remove('is-danger');
+    btnStart.innerText = 'Start';
     if (!failed) {
         domId('btn-show-demons').remove();
     } else {
@@ -155,7 +162,12 @@ function giveUp(failed = true) {
 }
 
 clickEvent(domId('btn-start'), async btn => {
-    btn.setAttribute('disabled', true);
+    if (playing) {
+        if (!window.confirm('Are you sure?')) {
+            return;
+        }
+    }
+    playing = true;
 
     preventLeaving = true;
 
@@ -189,6 +201,10 @@ clickEvent(domId('btn-start'), async btn => {
 
     currentDemons.shuffle();
     nextDemon(true);
+
+    btn.classList.remove('is-success');
+    btn.classList.add('is-danger');
+    btn.innerText = 'Restart';
 });
 
 // For closing modals
