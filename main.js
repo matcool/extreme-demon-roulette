@@ -167,6 +167,7 @@ clickEvent(domId('btn-start'), async btn => {
             return;
         }
     }
+    btn.setAttribute('disabled', true);
     playing = true;
 
     preventLeaving = true;
@@ -205,6 +206,7 @@ clickEvent(domId('btn-start'), async btn => {
     btn.classList.remove('is-success');
     btn.classList.add('is-danger');
     btn.innerText = 'Restart';
+    btn.removeAttribute('disabled');
 });
 
 // For closing modals
