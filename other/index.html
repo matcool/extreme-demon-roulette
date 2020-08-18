@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Extreme Demon Roulette</title>
+        <link rel="icon" type="image/png" href="https://gdbrowser.com/difficulty/demon-extreme-featured.png" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+        <style>
+            .demon-face {
+                width: 110px !important;
+                height: auto !important;
+            }
+
+            #status-text {
+                font-size: 1.3em;
+                font-weight: 500;
+            }
+
+            .percent {
+                font-size: 0.7em !important;
+                font-weight: 400 !important;
+            }
+
+            .copy-icon {
+                margin-left: 5px;
+                color: #aaa;
+            }
+
+            .copy-icon:hover {
+                color: #777;
+                cursor: pointer;
+            }
+
+            .hide {
+                display: none !important;
+            }
+        </style>
+
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Demon Roulette" />
+        <meta property="og:description"
+            content="Roulette for other demons" />
+        <meta property="og:url" content="https://matcool.github.io/extreme-demon-roulette/other" />
+    </head>
+
+    <body>
+        <div class="columns is-centered is-vcentered mt-2">
+            <div class="column is-narrow">
+                <label class="checkbox is-unselectable">
+                    <input id="chk-insane" type="checkbox" checked>
+                    Insane demons
+                </label>
+                <br>
+                <label class="checkbox is-unselectable">
+                    <input id="chk-hard" type="checkbox">
+                    Hard demons
+                </label>
+                <br>
+            </div>
+            <div class="column is-half has-text-centered">
+                <h1 class="title">Demon Roulette 
+                    <span id="btn-help" class="icon is-small"><i data-feather="help-circle"></i></span></h1>
+
+            </div>
+            <div class="column is-narrow has-text-right">
+                <a id="btn-start" class="button is-success">Start</a>
+            </div>
+        </div>
+
+        <div id="help-modal" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.3s;">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <div class="content">
+                        <p>roulette but this time with hard and insane demons!!</p>
+                        <p>doesn't have every single level ofc and it's manually updated</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="demons" class="container mt-6">
+        </div>
+
+        <div style="margin-bottom: 500px;">
+            <!-- spacing -->
+        </div>
+
+        <div id="demon-template" class="box hide">
+            <div class="columns is-1">
+                <div class="column is-narrow">
+                    <figure class="image">
+                        <img src="https://gdbrowser.com/assets/gdfaces/demon-$diff.png" class="demon-face">
+                    </figure>
+                </div>
+                <div class="column">
+                    <h1 class="title" id="current-title">$demonName<span class="icon is-small copy-icon" data-clipboard-text="$levelid"><i data-feather="copy"></i></span></h1>
+                    <h2 class="subtitle"><i>by $demonCreator</i></h2>
+                </div>
+                <div id="temp-column" class="column is-narrow">
+                    <input id="ipt-percent" class="input" type="number" placeholder="Atleast $percent%">
+                    <div class="columns is-1 mt-1">
+                        <div class="column">
+                            <a class="button is-success" id="btn-done">Done</a>
+                        </div>
+                        <div class="column">
+                            <a class="button is-danger" id="btn-give-up">Give up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+        <script src="https://unpkg.com/bulma-toast@2.0.1/dist/bulma-toast.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako_inflate.min.js" integrity="sha512-Xq51C9+MjQc6mTBRjXpUBuIzWUbxJNqa8KzxqcNe0hccW/dRG99kenA3/zVX2D7G4v59z8nDDxjBPTTAUTNRWA==" crossorigin="anonymous"></script>
+        <script src="main.js" defer></script>
+    </body>
+
+</html>
