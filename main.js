@@ -40,36 +40,6 @@ function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
 </div>`;
 }
 
-function domId(id) {
-    return document.getElementById(id);
-}
-
-function getCheckbox(id) {
-    return domId(id).checked;
-}
-
-function getInput(id) {
-    return domId(id).value;
-}
-
-// https://stackoverflow.com/a/6274381/9124836
-Object.defineProperty(Array.prototype, 'shuffle', {
-    value: function () {
-        for (let i = this.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this[i], this[j]] = [this[j], this[i]];
-        }
-        return this;
-    }
-});
-
-function clickEvent(element, listener) {
-    element.addEventListener('click', e => {
-        if (element.hasAttribute('disabled')) return;
-        listener(element, e);
-    });
-}
-
 function nextDemon(first = false) {
     if (!first) {
         let percent = Number(getInput('ipt-percent'));
@@ -102,16 +72,12 @@ function nextDemon(first = false) {
     domId('demons').insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[currentDemon], currentPercent));
     domId('btn-done').addEventListener('click', e => nextDemon());
     domId('btn-give-up').addEventListener('click', e => {
-        if (!window.confirm('Are you sure?')) {
-            return;
-        }
-        domId('temp-column').remove();
-        giveUp();
+        confirmModal().then(s => {
+            if (!s) return;
+            domId('temp-column').remove();
+            giveUp();
+        })
     });
-}
-
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function giveUp(failed = true) {
@@ -163,10 +129,16 @@ function giveUp(failed = true) {
 
 clickEvent(domId('btn-start'), async btn => {
     if (playing) {
-        if (!window.confirm('Are you sure?')) {
-            return;
-        }
+        confirmModal().then(async s => {
+            if (s) {
+                await start(btn);
+            }
+        });
+    } else {
+        await start(btn);
     }
+});
+async function start(btn) {
     btn.setAttribute('disabled', true);
     playing = true;
 
@@ -207,24 +179,4 @@ clickEvent(domId('btn-start'), async btn => {
     btn.classList.add('is-danger');
     btn.innerText = 'Restart';
     btn.removeAttribute('disabled');
-});
-
-// For closing modals
-document.addEventListener('click', e => {
-    let modal = document.querySelector('.modal.is-active');
-    if (modal && !e.target.closest('.modal.is-active .modal-content')) {
-        modal.classList.remove('is-active');
-    }
-})
-
-domId('btn-help').addEventListener('click', e => {
-    domId('help-modal').classList.add('is-active');
-    e.stopPropagation();
-});
-
-window.addEventListener('beforeunload', e => {
-    if (preventLeaving) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-});
+};

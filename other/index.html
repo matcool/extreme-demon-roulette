@@ -41,8 +41,7 @@
 
         <meta property="og:type" content="website">
         <meta property="og:title" content="Demon Roulette" />
-        <meta property="og:description"
-            content="Roulette for other demons" />
+        <meta property="og:description" content="Roulette for other demons" />
         <meta property="og:url" content="https://matcool.github.io/extreme-demon-roulette/other" />
     </head>
 
@@ -61,7 +60,7 @@
                 <br>
             </div>
             <div class="column is-half has-text-centered">
-                <h1 class="title">Demon Roulette 
+                <h1 class="title">Demon Roulette
                     <span id="btn-help" class="icon is-small"><i data-feather="help-circle"></i></span></h1>
 
             </div>
@@ -82,6 +81,19 @@
             </div>
         </div>
 
+        <div id="usure-modal" class="modal important-modal animate__animated animate__fadeIn" style="--animate-duration: 0.3s;">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Are you sure?</p>
+                  </header>
+                <footer class="modal-card-foot">
+                    <button id="usure-yes" class="button is-danger">Yes</button>
+                    <button id="usure-no" class="button">No</button>
+                </footer>
+            </div>
+        </div>
+
         <div id="demons" class="container mt-6">
         </div>
 
@@ -97,7 +109,8 @@
                     </figure>
                 </div>
                 <div class="column">
-                    <h1 class="title" id="current-title">$demonName<span class="icon is-small copy-icon" data-clipboard-text="$levelid"><i data-feather="copy"></i></span></h1>
+                    <h1 class="title" id="current-title">$demonName<span class="icon is-small copy-icon"
+                            data-clipboard-text="$levelid"><i data-feather="copy"></i></span></h1>
                     <h2 class="subtitle"><i>by $demonCreator</i></h2>
                 </div>
                 <div id="temp-column" class="column is-narrow">
@@ -118,7 +131,10 @@
         <script src="https://unpkg.com/bulma-toast@2.0.1/dist/bulma-toast.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako_inflate.min.js" integrity="sha512-Xq51C9+MjQc6mTBRjXpUBuIzWUbxJNqa8KzxqcNe0hccW/dRG99kenA3/zVX2D7G4v59z8nDDxjBPTTAUTNRWA==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako_inflate.min.js"
+            integrity="sha512-Xq51C9+MjQc6mTBRjXpUBuIzWUbxJNqa8KzxqcNe0hccW/dRG99kenA3/zVX2D7G4v59z8nDDxjBPTTAUTNRWA=="
+            crossorigin="anonymous"></script>
+        <script src="../shared.js" defer></script>
         <script src="main.js" defer></script>
     </body>
 
