@@ -63,6 +63,7 @@
 
             </div>
             <div class="column is-narrow has-text-right">
+                <a id="btn-save-load" class="button is-info">Save</a>
                 <a id="btn-start" class="button is-success">Start</a>
             </div>
         </div>
@@ -95,6 +96,23 @@
             </div>
         </div>
 
+        <div id="save-modal" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.3s;">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Save / Load</p>
+                  </header>
+                <section class="modal-card-body">
+                    <input id="ipt-save-file" type="file" style="margin-bottom: 20px" />
+                    <textarea class="textarea" id="ta-save-load"></textarea>
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="btn-save" class="button is-info">Save</button>
+                    <button id="btn-load" class="button is-info">Load</button>
+                </footer>
+            </div>
+        </div>
+
         <div id="demons" class="container mt-6">
         </div>
 
@@ -106,6 +124,14 @@
         <script src="https://unpkg.com/bulma-toast@2.0.1/dist/bulma-toast.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+        <script>exports = {};</script>
+        <script src="https://unpkg.com/byte-base64@1.1.0/lib.js"></script>
+        <script src="https://unpkg.com/@msgpack/msgpack@2.3.0/dist.es5+umd/msgpack.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako_inflate.min.js"
+            integrity="sha512-Xq51C9+MjQc6mTBRjXpUBuIzWUbxJNqa8KzxqcNe0hccW/dRG99kenA3/zVX2D7G4v59z8nDDxjBPTTAUTNRWA=="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.2/pako.min.js"></script>
+        <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
         <script src="shared.js" defer></script>
         <script src="main.js" defer></script>
     </body>

@@ -4,13 +4,15 @@ const api = 'https://matcool.tk';
 let currentDemons = [];
 let currentDemon = 0;
 let currentPercent = 0;
+let pastPercents = [];
 let playing = false;
 
 let lastCheckboxes = [true, true, false];
 
 let preventLeaving = false;
 
-feather.replace(); // for the iconset
+exports.feather.replace(); // for the iconset
+const axios = exports.axios;
 
 function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
     return `\
@@ -61,6 +63,7 @@ function nextDemon(first = false) {
         let title = domId('current-title');
         title.insertAdjacentHTML('beforeend', `<span class="percent ml-1"> ${percent}%</span>`);
         title.removeAttribute('id');
+        pastPercents.push(percent);
         currentPercent = percent + 1;
         currentDemon++;
 
@@ -84,8 +87,11 @@ function giveUp(failed = true) {
     playing = false;
     preventLeaving = false;
 
-    if (failed)
-        domId('current-title').removeAttribute('id');
+    if (failed) {
+        let title = domId('current-title');
+        if (title)
+            title.removeAttribute('id');
+    }
 
     domId('demons').insertAdjacentHTML('beforeend', `\
 <div class="box has-text-centered animate__animated animate__fadeInUp">
@@ -95,7 +101,7 @@ function giveUp(failed = true) {
         Number of demons: ${currentDemon} <br>
         Highest percent: ${currentPercent - 1}%
         </p>
-        <p><span id="status-text" style="color: ${failed ? 'red' : 'green'};">${failed ? 'FAILED' : 'GG'}</span></p>
+        ${failed ? '' : '<p><span id="status-text" style="color: green;">GG</span></p>'}
         <a class="button is-info" id="btn-show-demons">Show remaining demons</a>
     </div>
 </div>`);
@@ -159,6 +165,7 @@ async function start(btn) {
 
     currentDemon = 0;
     currentPercent = 1;
+    pastPercents = [];
 
     domId('demons').textContent = '';
 
@@ -180,3 +187,61 @@ async function start(btn) {
     btn.innerText = 'Restart';
     btn.removeAttribute('disabled');
 };
+
+clickEvent(domId('btn-save-load'), async (btn, e) => {
+    e.stopPropagation();
+    const state = {
+        playing,
+        demon: currentDemon,
+        percent: currentPercent,
+        percents: pastPercents,
+        main: getCheckbox('chk-main-list'),
+        extended: getCheckbox('chk-extended-list'),
+        legacy: getCheckbox('chk-legacy-list'),
+        demons: currentDemons.map(demon => Object.values(demon))
+    };
+    const loadedState = await saveLoadModal(state);
+    if (loadedState) {
+        if (loadedState.demons.length === 0) return;
+        playing = loadedState.playing;
+        setCheckbox('chk-main-list', loadedState.main);
+        setCheckbox('chk-extended-list', loadedState.extended);
+        setCheckbox('chk-legacy-list', loadedState.legacy);
+        lastCheckboxes = [loadedState.main, loadedState.extended, loadedState.legacy];
+        currentDemon = loadedState.demon;
+        currentPercent = loadedState.percent;
+        pastPercents = loadedState.percents;
+        currentDemons = loadedState.demons.map(demon => {
+            return {
+                position: demon[0],
+                name: demon[1],
+                publisher: demon[2],
+                video: demon[3]
+            };
+        });
+        const demons = domId('demons');
+        demons.innerHTML = '';
+        for (let i = 0; i < currentDemon; ++i) {
+            demons.insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[i]));
+            domId('temp-column').remove();
+            let title = domId('current-title');
+            title.insertAdjacentHTML('beforeend', `<span class="percent ml-1"> ${pastPercents[i]}%</span>`);
+            title.removeAttribute('id');
+        }
+        if (playing) {
+            nextDemon(true);
+            let btn = domId('btn-start');
+            btn.classList.remove('is-success');
+            btn.classList.add('is-danger');
+            btn.innerText = 'Restart';
+            preventLeaving = true;
+        } else {
+            let failed = currentPercent <= 100;
+            if (failed) {
+                demons.insertAdjacentHTML('beforeend', getDemonHTML(currentDemons[currentDemon]));
+                domId('temp-column').remove();
+            }
+            giveUp(failed);
+        }
+    }
+});
