@@ -1,0 +1,12 @@
+root = true
+
+[*]
+insert_final_newline = true
+
+[*.md]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+[*.{js,css,html,json,vue}]
+indent_size = 4
+indent_style = space
