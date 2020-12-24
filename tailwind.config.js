@@ -3,6 +3,11 @@ module.exports = {
     theme: {
         extend: {},
     },
-    variants: {},
+    variants: {
+        extend: {
+            cursor: ['hover'],
+            textColor: ['active'],
+        }
+    },
     plugins: [],
 };

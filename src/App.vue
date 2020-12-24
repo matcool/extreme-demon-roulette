@@ -143,6 +143,7 @@ export default defineComponent({
 
         async function start() {
             if (fetching.value) return;
+            if (!Object.values(selected).some(i => i)) return;
             playing.value = true;
             fetching.value = true;
             showRemaining.value = false;

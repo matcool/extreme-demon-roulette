@@ -1,12 +1,14 @@
 {
     "name": "roulette-vue",
     "version": "0.0.1",
+    "license": "MIT",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
         "pretty": "prettier --write ."
     },
     "dependencies": {
+        "@zhuowenli/vue-feather-icons": "^5.0.2",
         "tailwindcss": "compat",
         "vue": "^3.0.4"
     },

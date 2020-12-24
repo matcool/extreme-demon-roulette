@@ -14,6 +14,11 @@
                     by {{ demon.publisher.name }}
                 </section>
             </div>
+            <div v-if="active">
+                <div class="text-gray-400 hover:text-gray-600 active:text-gray-900 hover:cursor-pointer mt-3 ml-2" @click="clipboardCopy">
+                    <copy-icon size="1.1x"></copy-icon>
+                </div>
+            </div>
             <span v-if="percent" class="ml-3 mt-0.5 text-gray-500 text-2xl">{{ percent }}%</span>
         </div>
         <div v-if="active" class="flex md:flex-grow justify-center md:justify-end mt-4 md:mt-0">
@@ -73,9 +78,13 @@
 <script lang="ts">
 import { defineComponent, PropType, computed, ref } from 'vue';
 import { PointercrateDemon } from '../types';
+import { CopyIcon } from '@zhuowenli/vue-feather-icons';
 
 export default defineComponent({
     name: 'Demon',
+    components: {
+        CopyIcon,
+    },
     props: {
         demon: {
             type: Object as PropType<PointercrateDemon>,
@@ -105,11 +114,15 @@ export default defineComponent({
             iptPercent.value = '';
             ctx.emit('give-up');
         }
+        function clipboardCopy() {
+            navigator.clipboard.writeText(props.demon.level_id.toString());
+        }
         return {
             thumbnail,
             iptPercent,
             done,
             giveUp,
+            clipboardCopy,
         };
     },
 });
