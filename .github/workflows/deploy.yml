@@ -2,9 +2,9 @@ name: Deploy to Github Pages
 
 on:
   push:
-    branches: [ master ]
+    branches: [ vue-rewrite ]
   pull_request:
-    branches: [ master ]
+    branches: [ vue-rewrite ]
 
   workflow_dispatch:
 
