@@ -7,7 +7,7 @@ module.exports = {
         extend: {
             cursor: ['hover'],
             textColor: ['active'],
-        }
+        },
     },
     plugins: [],
 };

@@ -159,7 +159,7 @@ export default defineComponent({
             if (selected.legacyList) {
                 demons.push(...(await fetchDemons(150)));
                 // is this even worth it
-                demons.push(...(await fetchDemons(250)).filter((demon) => demon.level_id));
+                demons.push(...(await fetchDemons(250)).filter(demon => demon.level_id));
             }
             fetching.value = false;
             shuffle(demons);

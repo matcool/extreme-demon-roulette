@@ -1,4 +1,4 @@
-import { PointercrateDemon } from "./types";
+import { PointercrateDemon } from './types';
 
 export function shuffle<T>(a: T[]): T[] {
     for (let i = a.length - 1; i > 0; i--) {
@@ -22,24 +22,45 @@ export function fakeDemon(name: string, creator: string, video: string | null): 
         publisher: {
             banned: false,
             id: 1,
-            name: creator
+            name: creator,
         },
         requirement: 1,
         verifier: {
             banned: false,
             id: 1,
-            name: 'a'
+            name: 'a',
         },
-        video
+        video,
     };
 }
 
 export function fakeDemonName(): string {
     // this is messy idc
-    const adjectives = ['awesome', 'incredible', 'deep', 'scary', 'terror', 'deadly', 'death', 'killing'];
-    const nouns = ['day', 'city', 'tower', 'demon', 'ghost', 'death', 'satan', 'circles', 'sequel', 'v2', 'chamber'];
-    let name = []
-    if (Math.random() > 0.5) name.push('The')
+    const adjectives = [
+        'awesome',
+        'incredible',
+        'deep',
+        'scary',
+        'terror',
+        'deadly',
+        'death',
+        'killing',
+    ];
+    const nouns = [
+        'day',
+        'city',
+        'tower',
+        'demon',
+        'ghost',
+        'death',
+        'satan',
+        'circles',
+        'sequel',
+        'v2',
+        'chamber',
+    ];
+    let name = [];
+    if (Math.random() > 0.5) name.push('The');
     name.push(adjectives[Math.floor(Math.random() * adjectives.length)]);
     name.push(nouns[Math.floor(Math.random() * nouns.length)]);
     return name.join(' ');

@@ -1,5 +1,8 @@
 <template>
-    <article class="flex flex-col md:flex-row p-5 shadow-lg w-full" :class="{'fade-in-up': animate}">
+    <article
+        class="flex flex-col md:flex-row p-5 shadow-lg w-full"
+        :class="{ 'fade-in-up': animate }"
+    >
         <a :href="demon.video">
             <img class="w-full md:w-48 md:h-28" loading="lazy" :src="thumbnail" alt="thumbnail" />
         </a>
@@ -15,7 +18,10 @@
                 </section>
             </div>
             <div v-if="active">
-                <div class="text-gray-400 hover:text-gray-600 active:text-gray-900 hover:cursor-pointer mt-3 ml-2" @click="clipboardCopy">
+                <div
+                    class="text-gray-400 hover:text-gray-600 active:text-gray-900 hover:cursor-pointer mt-3 ml-2"
+                    @click="clipboardCopy"
+                >
                     <copy-icon size="1.1x"></copy-icon>
                 </div>
             </div>
@@ -49,30 +55,30 @@
 </template>
 
 <style>
-    /*
-        from https://github.com/animate-css/animate.css/blob/main/source/fading_entrances/fadeInUpBig.css
-    */
-    @keyframes fadeInUpBig {
-        from {
-            opacity: 0;
-            transform: translate3d(0, 2000px, 0);
-        }
-
-        to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
+/*
+    from https://github.com/animate-css/animate.css/blob/main/source/fading_entrances/fadeInUpBig.css
+*/
+@keyframes fadeInUpBig {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 2000px, 0);
     }
 
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.fade-in-up {
+    animation-duration: 1s;
+    animation-name: fadeInUpBig;
+}
+@media (prefers-reduced-motion) {
     .fade-in-up {
-        animation-duration: 1s;
-        animation-name: fadeInUpBig;
+        animation: none;
     }
-    @media (prefers-reduced-motion) {
-        .fade-in-up {
-            animation: none;
-        }
-    }
+}
 </style>
 
 <script lang="ts">
@@ -95,8 +101,8 @@ export default defineComponent({
         currentPercent: Number,
         animate: {
             type: Boolean,
-            default: true
-        }
+            default: true,
+        },
     },
     emits: ['done', 'give-up'],
     setup(props, ctx) {
