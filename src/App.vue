@@ -104,11 +104,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue';
+import { defineComponent, reactive, ref, computed, onUnmounted } from 'vue';
 import Demon from './components/Demon.vue';
 import Modal from './components/Modal.vue';
 import { PointercrateDemon } from './types';
 import { shuffle, clearArray, fakeDemon, fakeDemonName } from './utils';
+import { unloadHandler } from './unloadHandler';
 
 export default defineComponent({
     components: {
@@ -140,6 +141,11 @@ export default defineComponent({
 
         const playing = ref(false);
         const fetching = ref(false);
+
+        const stopHandler = unloadHandler(playing);
+        onUnmounted(() => {
+            stopHandler();
+        });
 
         async function start() {
             if (fetching.value) return;

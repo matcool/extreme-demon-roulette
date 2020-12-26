@@ -3,12 +3,12 @@
         class="flex flex-col md:flex-row p-5 shadow-lg w-full"
         :class="{ 'fade-in-up': animate }"
     >
-        <a :href="demon.video">
+        <a :href="demon.video" target="_blank" rel="noopener noreferrer">
             <img class="w-full md:w-48 md:h-28" loading="lazy" :src="thumbnail" alt="thumbnail" />
         </a>
         <div class="flex mt-2 md:mt-0 justify-between md:justify-start">
             <div class="flex flex-col md:ml-5">
-                <a :href="`https://pointercrate.com/demonlist/${demon.position}`">
+                <a :href="`https://pointercrate.com/demonlist/${demon.position}`" target="_blank" rel="noopener noreferrer">
                     <header class="text-xl md:text-3xl font-medium text-gray-900 hover:underline">
                         #{{ demon.position }} - {{ demon.name }}
                     </header>
