@@ -11,5 +11,5 @@ export function unloadHandler(preventUnload: Ref<boolean>): () => void {
     window.addEventListener('beforeunload', listener);
     return () => {
         window.removeEventListener('beforeunload', listener);
-    }
+    };
 }

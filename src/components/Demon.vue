@@ -3,19 +3,26 @@
         class="flex flex-col md:flex-row p-5 shadow-lg w-full"
         :class="{ 'fade-in-up': animate }"
     >
-        <a :href="demon.video" target="_blank" rel="noopener noreferrer">
-            <img class="w-full md:w-48 md:h-28" loading="lazy" :src="thumbnail" alt="thumbnail" />
+        <a :href="`https://youtu.be/${demon.video}`" target="_blank" rel="noopener noreferrer">
+            <img
+                class="w-full md:w-48 md:h-28"
+                loading="lazy"
+                :src="`https://i.ytimg.com/vi/${demon.video}/mqdefault.jpg`"
+                alt="thumbnail"
+            />
         </a>
         <div class="flex mt-2 md:mt-0 justify-between md:justify-start">
             <div class="flex flex-col md:ml-5">
-                <a :href="`https://pointercrate.com/demonlist/${demon.position}`" target="_blank" rel="noopener noreferrer">
+                <a
+                    :href="`https://pointercrate.com/demonlist/${demon.position}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <header class="text-xl md:text-3xl font-medium text-gray-900 hover:underline">
                         #{{ demon.position }} - {{ demon.name }}
                     </header>
                 </a>
-                <section class="text-lg italic text-gray-700">
-                    by {{ demon.publisher.name }}
-                </section>
+                <section class="text-lg italic text-gray-700">by {{ demon.creator }}</section>
             </div>
             <div v-if="active">
                 <div
@@ -55,9 +62,7 @@
 </template>
 
 <style>
-/*
-    from https://github.com/animate-css/animate.css/blob/main/source/fading_entrances/fadeInUpBig.css
-*/
+/* from https://github.com/animate-css/animate.css/blob/main/source/fading_entrances/fadeInUpBig.css */
 @keyframes fadeInUpBig {
     from {
         opacity: 0;
@@ -82,8 +87,8 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, ref } from 'vue';
-import { PointercrateDemon } from '../types';
+import { defineComponent, PropType, ref } from 'vue';
+import { SimplifiedDemon } from '../types';
 import { CopyIcon } from '@zhuowenli/vue-feather-icons';
 
 export default defineComponent({
@@ -93,7 +98,7 @@ export default defineComponent({
     },
     props: {
         demon: {
-            type: Object as PropType<PointercrateDemon>,
+            type: Object as PropType<SimplifiedDemon>,
             required: true,
         },
         active: Boolean,
@@ -106,25 +111,22 @@ export default defineComponent({
     },
     emits: ['done', 'give-up'],
     setup(props, ctx) {
-        const thumbnail = computed(() => {
-            const match = props.demon.video?.match(/https:\/\/www\.youtube\.com\/watch\?v=(.{11})/);
-            return !!match
-                ? `https://i.ytimg.com/vi/${match[1]}/mqdefault.jpg`
-                : `https://i.ytimg.com/vi/a/mqdefault.jpg`;
-        });
         const iptPercent = ref('');
+
         function done() {
             ctx.emit('done', parseInt(iptPercent.value));
         }
+
         function giveUp() {
             iptPercent.value = '';
             ctx.emit('give-up');
         }
+
         function clipboardCopy() {
-            navigator.clipboard.writeText(props.demon.level_id.toString());
+            navigator.clipboard.writeText(props.demon.levelID!.toString());
         }
+
         return {
-            thumbnail,
             iptPercent,
             done,
             giveUp,

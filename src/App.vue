@@ -7,33 +7,41 @@
             <div class="flex mt-5 mx-3 justify-between items-center">
                 <div class="flex flex-col text-gray-800">
                     <label>
-                        <input type="checkbox" v-model="selected.mainList" />
+                        <input type="checkbox" v-model="selectedLists.main" />
                         Main list
                     </label>
                     <label>
-                        <input type="checkbox" v-model="selected.extendedList" />
+                        <input type="checkbox" v-model="selectedLists.extended" />
                         Extended list
                     </label>
                     <label>
-                        <input type="checkbox" v-model="selected.legacyList" />
+                        <input type="checkbox" v-model="selectedLists.legacy" />
                         Legacy list
                     </label>
                 </div>
                 <h1 class="hidden md:block text-3xl font-medium text-center text-gray-800">
                     Extreme Demon Roulette
                 </h1>
-                <button
-                    @click="start()"
-                    class="text-white rounded px-4 py-2"
-                    :class="{
-                        'bg-green-500 hover:bg-green-600': !playing,
-                        'bg-red-500 hover:bg-red-600': playing,
-                        'opacity-60 cursor-not-allowed': fetching,
-                    }"
-                    :disabled="fetching"
-                >
-                    {{ playing ? 'Restart' : 'Start' }}
-                </button>
+                <div class="flex">
+                    <button
+                        @click="showSaveModal = true"
+                        class="text-white rounded px-4 py-2 bg-blue-500 hover:bg-blue-600 mr-2"
+                    >
+                        Save
+                    </button>
+                    <button
+                        @click="start()"
+                        class="text-white rounded px-4 py-2"
+                        :class="{
+                            'bg-green-500 hover:bg-green-600': !playing,
+                            'bg-red-500 hover:bg-red-600': playing,
+                            'opacity-60 cursor-not-allowed': fetching,
+                        }"
+                        :disabled="fetching"
+                    >
+                        {{ playing ? 'Restart' : 'Start' }}
+                    </button>
+                </div>
             </div>
             <!-- switch gap to my-x -->
             <div class="flex flex-col items-center w-screen max-w-7xl gap-5 mt-10">
@@ -101,39 +109,44 @@
             </footer>
         </div>
     </modal>
+    <save-modal :show="showSaveModal" @close="onSaveModalClose" @save="save" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, computed, onUnmounted } from 'vue';
 import Demon from './components/Demon.vue';
 import Modal from './components/Modal.vue';
-import { PointercrateDemon } from './types';
-import { shuffle, clearArray, fakeDemon, fakeDemonName } from './utils';
+import SaveModal from './components/SaveModal.vue';
+import { RouletteState, SimplifiedDemon } from './types';
+import { shuffle, clearArray } from './utils';
 import { unloadHandler } from './unloadHandler';
+import { simplifyDemon, compressState, decompressState } from './save';
+import { saveAs } from 'file-saver';
 
 export default defineComponent({
     components: {
         Demon,
         Modal,
+        SaveModal,
     },
     setup() {
-        const selected = reactive({
-            mainList: true,
-            extendedList: true,
-            legacyList: false,
+        const selectedLists = reactive({
+            main: true,
+            extended: true,
+            legacy: false,
         });
 
-        let demons = reactive([] as PointercrateDemon[]);
+        let demons = reactive([] as SimplifiedDemon[]);
 
         async function fetchDemons(
             after: number = 0,
             limit: number = 100
-        ): Promise<PointercrateDemon[]> {
+        ): Promise<SimplifiedDemon[]> {
             const response = await fetch(
                 `https://pointercrate.com/api/v1/demons/?limit=${limit}&after=${after}`
             );
             if (response.ok) {
-                return await response.json();
+                return (await response.json()).map(simplifyDemon);
             } else {
                 return [];
             }
@@ -149,23 +162,23 @@ export default defineComponent({
 
         async function start() {
             if (fetching.value) return;
-            if (!Object.values(selected).some(i => i)) return;
+            if (!Object.values(selectedLists).some(i => i)) return;
             playing.value = true;
             fetching.value = true;
             showRemaining.value = false;
             clearArray(demons);
             currentDemon.value = -1;
-            if (false) {
-                for (let i = 0; i < 50; ++i) {
-                    demons.push(fakeDemon(fakeDemonName(), 'MAT', null));
-                }
-            }
-            if (selected.mainList) demons.push(...(await fetchDemons(0, 75)));
-            if (selected.extendedList) demons.push(...(await fetchDemons(75, 75)));
-            if (selected.legacyList) {
+            // if (false) {
+            //     for (let i = 0; i < 50; ++i) {
+            //         demons.push(fakeDemon(fakeDemonName(), 'MAT', null));
+            //     }
+            // }
+            if (selectedLists.main) demons.push(...(await fetchDemons(0, 75)));
+            if (selectedLists.extended) demons.push(...(await fetchDemons(75, 75)));
+            if (selectedLists.legacy) {
                 demons.push(...(await fetchDemons(150)));
                 // is this even worth it
-                demons.push(...(await fetchDemons(250)).filter(demon => demon.level_id));
+                demons.push(...(await fetchDemons(250)).filter(demon => demon.levelID));
             }
             fetching.value = false;
             shuffle(demons);
@@ -173,6 +186,8 @@ export default defineComponent({
             currentPercent.value = 1;
             clearArray(percents);
         }
+
+        // maybe put this all in a big state object
 
         const currentDemons = computed(() => {
             return demons.slice(0, currentDemon.value + 1);
@@ -213,6 +228,44 @@ export default defineComponent({
             playing.value = false;
         }
 
+        function save() {
+            const state: RouletteState = {
+                playing: playing.value,
+                selectedLists,
+                demons: demons,
+                current: currentDemon.value,
+                percent: currentPercent.value,
+                percents: percents,
+            };
+            const data = compressState(state);
+            // ackstually it should be msgpack+deflate but thats ugly
+            const blob = new Blob([data], { type: 'application/msgpack' });
+            saveAs(blob, 'roulette-save.mp');
+        }
+
+        const showSaveModal = ref(false);
+
+        function onSaveModalClose(file?: File) {
+            if (file) {
+                loadSave(file);
+            }
+            showSaveModal.value = false;
+        }
+
+        function loadSave(file: File) {
+            file.arrayBuffer().then(buffer => {
+                const state = decompressState(new Uint8Array(buffer));
+                playing.value = state.playing;
+                Object.assign(selectedLists, state.selectedLists);
+                clearArray(demons);
+                demons.push(...state.demons);
+                currentDemon.value = state.current;
+                currentPercent.value = state.percent;
+                clearArray(percents);
+                percents.push(...state.percents);
+            });
+        }
+
         return {
             demons,
             currentDemons,
@@ -221,7 +274,7 @@ export default defineComponent({
             percents,
             demonDone,
             giveUp,
-            selected,
+            selectedLists,
             start,
             playing,
             fetching,
@@ -229,6 +282,9 @@ export default defineComponent({
             showRemaining,
             remainingDemons,
             showGiveUpModal,
+            save,
+            onSaveModalClose,
+            showSaveModal,
         };
     },
 });

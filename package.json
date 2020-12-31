@@ -8,11 +8,16 @@
         "pretty": "prettier --write ."
     },
     "dependencies": {
+        "@msgpack/msgpack": "^2.3.0",
         "@zhuowenli/vue-feather-icons": "^5.0.2",
+        "byte-base64": "^1.1.0",
+        "fflate": "^0.4.4",
+        "file-saver": "^2.0.5",
         "tailwindcss": "compat",
         "vue": "^3.0.4"
     },
     "devDependencies": {
+        "@types/file-saver": "^2.0.1",
         "@vue/compiler-sfc": "^3.0.4",
         "eslint": "^7.15.0",
         "eslint-config-ktsn-vue": "^2.1.0",
