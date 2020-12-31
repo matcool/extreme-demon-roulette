@@ -88,27 +88,7 @@
             <div class="mb-32"></div>
         </div>
     </div>
-    <modal :show="showGiveUpModal" :cancelable="false" @close="showGiveUpModal = false">
-        <div class="md:w-96">
-            <header class="bg-white p-4 rounded-t">
-                <h2 class="text-2xl">Are you sure?</h2>
-            </header>
-            <footer class="flex justify-between md:justify-start bg-gray-100 p-4 rounded-b">
-                <button
-                    @click="giveUp()"
-                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
-                >
-                    Yes
-                </button>
-                <button
-                    @click="showGiveUpModal = false"
-                    class="px-4 py-2 bg-white hover:bg-gray-300 shadow rounded ml-2"
-                >
-                    No
-                </button>
-            </footer>
-        </div>
-    </modal>
+    <give-up-modal :show="showGiveUpModal" @close="showGiveUpModal = false" @give-up="giveUp" />
     <save-modal :show="showSaveModal" @close="onSaveModalClose" @save="save" />
 </template>
 
@@ -117,6 +97,7 @@ import { defineComponent, reactive, ref, computed, onUnmounted } from 'vue';
 import Demon from './components/Demon.vue';
 import Modal from './components/Modal.vue';
 import SaveModal from './components/SaveModal.vue';
+import GiveUpModal from './components/GiveUpModal.vue';
 import { RouletteState, SimplifiedDemon } from './types';
 import { shuffle, clearArray } from './utils';
 import { unloadHandler } from './unloadHandler';
@@ -128,6 +109,7 @@ export default defineComponent({
         Demon,
         Modal,
         SaveModal,
+        GiveUpModal
     },
     setup() {
         const selectedLists = reactive({
