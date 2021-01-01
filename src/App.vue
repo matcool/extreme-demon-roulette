@@ -1,7 +1,10 @@
 <template>
     <div class="flex justify-center">
         <div class="flex flex-col">
-            <h1 class="block md:hidden mt-5 text-3xl font-medium text-center text-gray-800">
+            <!-- is it really worth doing all these transforms for it to be centered -->
+            <h1
+                class="md:absolute md:left-1/2 md:top-3 md:transform-gpu md:-translate-x-1/2 mt-5 text-3xl font-medium text-center text-gray-800"
+            >
                 Extreme Demon Roulette
             </h1>
             <div class="flex mt-5 mx-3 justify-between items-center">
@@ -19,9 +22,6 @@
                         Legacy list
                     </label>
                 </div>
-                <h1 class="hidden md:block text-3xl font-medium text-center text-gray-800">
-                    Extreme Demon Roulette
-                </h1>
                 <div class="flex">
                     <button
                         @click="showSaveModal = true"
@@ -109,7 +109,7 @@ export default defineComponent({
         Demon,
         Modal,
         SaveModal,
-        GiveUpModal
+        GiveUpModal,
     },
     setup() {
         const selectedLists = reactive({
