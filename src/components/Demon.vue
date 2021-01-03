@@ -24,7 +24,7 @@
                 </a>
                 <section class="text-lg italic text-gray-700">by {{ demon.creator }}</section>
             </div>
-            <div v-if="active">
+            <div v-if="active && demon.levelID">
                 <div
                     class="text-gray-400 hover:text-gray-600 active:text-gray-900 hover:cursor-pointer mt-3 ml-2"
                     @click="clipboardCopy"
@@ -123,7 +123,9 @@ export default defineComponent({
         }
 
         function clipboardCopy() {
-            navigator.clipboard.writeText(props.demon.levelID!.toString());
+            if (props.demon.levelID) {
+                navigator.clipboard.writeText(props.demon.levelID.toString());
+            }
         }
 
         return {
