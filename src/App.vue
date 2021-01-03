@@ -3,7 +3,8 @@
         <div class="flex flex-col">
             <!-- is it really worth doing all these transforms for it to be centered -->
             <h1
-                class="md:absolute md:left-1/2 md:top-3 md:transform-gpu md:-translate-x-1/2 mt-5 text-3xl font-medium text-center text-gray-800"
+                class="md:absolute md:left-1/2 md:top-3 md:transform-gpu md:-translate-x-1/2 mt-5 text-3xl font-medium text-center text-gray-800 cursor-help md:border-b-2 border-dashed hover:border-gray-600"
+                @click="showAboutModal = true"
             >
                 Extreme Demon Roulette
             </h1>
@@ -43,7 +44,7 @@
                     </button>
                 </div>
             </div>
-            <!-- switch gap to my-x -->
+            <!-- TODO: switch gap to my-x -->
             <div class="flex flex-col items-center w-screen max-w-7xl gap-5 mt-10">
                 <demon
                     v-for="(demon, i) in currentDemons"
@@ -73,7 +74,7 @@
                     Show remaining demons
                 </button>
             </article>
-            <div v-if="showRemaining">
+            <div v-if="showRemaining" class="flex flex-col mt-5 gap-5">
                 <demon
                     v-for="(demon, i) in remainingDemons"
                     :key="i"
@@ -85,11 +86,39 @@
                 />
             </div>
             <!-- spacing -->
-            <div class="mb-32"></div>
+            <div class="mb-64"></div>
         </div>
     </div>
     <give-up-modal :show="showGiveUpModal" @close="showGiveUpModal = false" @give-up="giveUp" />
     <save-modal :show="showSaveModal" @close="onSaveModalClose" @save="save" />
+    <modal :cancelable="true" :show="showAboutModal" @close="showAboutModal = false">
+        <div class="max-w-xl bg-white rounded-lg p-5">
+            <header>
+                <h2 class="text-2xl">About</h2>
+            </header>
+            <section>
+                <p>
+                    The Extreme Demon Roulette is a challenge where you must go through as many
+                    demons as possible, with the challenge ending when you get 100% or give up.
+                </p>
+                <p>
+                    Idea by
+                    <a href="https://youtu.be/nv_9FkfGRsc" class="text-blue-500 hover:underline"
+                        >npesta</a
+                    >, website by
+                    <a href="https://github.com/matcool/" class="text-blue-500 hover:underline"
+                        >me :)</a
+                    >
+                </p>
+            </section>
+            <section class="pt-4">
+                <label>
+                    <input type="checkbox" v-model="darkMode" />
+                    Dark mode
+                </label>
+            </section>
+        </div>
+    </modal>
 </template>
 
 <script lang="ts">
@@ -248,6 +277,10 @@ export default defineComponent({
             });
         }
 
+        const showAboutModal = ref(false);
+        // does nothing for now
+        const darkMode = ref(false);
+
         return {
             demons,
             currentDemons,
@@ -267,6 +300,8 @@ export default defineComponent({
             save,
             onSaveModalClose,
             showSaveModal,
+            showAboutModal,
+            darkMode,
         };
     },
 });
