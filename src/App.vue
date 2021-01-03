@@ -274,6 +274,7 @@ export default defineComponent({
                 currentPercent.value = state.percent;
                 clearArray(percents);
                 percents.push(...state.percents);
+                showRemaining.value = false;
             });
         }
 
