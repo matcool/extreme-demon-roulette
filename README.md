@@ -1,6 +1,6 @@
 # [Extreme Demon Roulette](https://matcool.github.io/extreme-demon-roulette/)
 
-![screenshot of the website](https://i.imgur.com/7DZ4Py1.png)
+![screenshot of the website](https://i.imgur.com/0Ws36xN.png)
 
 ## Running locally
 
