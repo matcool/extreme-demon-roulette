@@ -1,128 +1,131 @@
 <template>
-    <div class="flex justify-center">
-        <div class="flex flex-col">
-            <!-- is it really worth doing all these transforms for it to be centered -->
-            <h1
-                class="md:absolute md:left-1/2 md:top-3 md:transform-gpu md:-translate-x-1/2 mt-5 text-3xl font-medium text-center text-gray-800 cursor-help md:border-b-2 border-dashed hover:border-gray-600"
-                @click="showAboutModal = true"
-            >
-                Extreme Demon Roulette
-            </h1>
-            <div class="flex mt-5 mx-3 justify-between items-center">
-                <div class="flex flex-col text-gray-800">
-                    <label>
-                        <input type="checkbox" v-model="selectedLists.main" />
-                        Main list
-                    </label>
-                    <label>
-                        <input type="checkbox" v-model="selectedLists.extended" />
-                        Extended list
-                    </label>
-                    <label>
-                        <input type="checkbox" v-model="selectedLists.legacy" />
-                        Legacy list
-                    </label>
-                </div>
-                <div class="flex">
-                    <button
-                        @click="showSaveModal = true"
-                        class="text-white rounded px-4 py-2 bg-blue-500 hover:bg-blue-600 mr-2"
-                    >
-                        Save
-                    </button>
-                    <button
-                        @click="start()"
-                        class="text-white rounded px-4 py-2"
-                        :class="{
-                            'bg-green-500 hover:bg-green-600': !playing,
-                            'bg-red-500 hover:bg-red-600': playing,
-                            'opacity-60 cursor-not-allowed': fetching,
-                        }"
-                        :disabled="fetching"
-                    >
-                        {{ playing ? 'Restart' : 'Start' }}
-                    </button>
-                </div>
-            </div>
-            <!-- TODO: switch gap to my-x -->
-            <div class="flex flex-col items-center w-screen max-w-7xl gap-5 mt-10">
-                <demon
-                    v-for="(demon, i) in currentDemons"
-                    :key="i"
-                    :demon="demon"
-                    :active="playing && i === currentDemon"
-                    :currentPercent="currentPercent"
-                    :percent="percents[i]"
-                    @done="demonDone"
-                    @give-up="showGiveUpModal = true"
-                />
-            </div>
-            <article
-                v-if="showResults"
-                class="flex flex-col items-center mt-5 p-5 shadow-lg w-full"
-            >
-                <h2 class="text-3xl font-medium text-gray-800">Results</h2>
-                <section class="text-xl mt-4 text-center">
-                    <p>Number of demons: {{ percents.length }}</p>
-                    <p>Highest percent: {{ currentPercent - 1 }}%</p>
-                </section>
-                <button
-                    @click="showRemaining = true"
-                    v-if="currentPercent < 100"
-                    class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+    <main :class="{ dark: darkMode }">
+        <div class="w-screen h-screen fixed -z-10 dark:bg-plain-gray"></div>
+        <div class="flex justify-center">
+            <div class="flex flex-col">
+                <!-- is it really worth doing all these transforms for it to be centered -->
+                <h1
+                    class="md:absolute md:left-1/2 md:top-3 md:transform-gpu md:-translate-x-1/2 mt-5 text-3xl font-medium text-center text-gray-800 dark:text-gray-200 cursor-help md:border-b-2 border-dashed hover:border-gray-600 dark:border-gray-600 dark:hover:border-gray-300"
+                    @click="showAboutModal = true"
                 >
-                    Show remaining demons
-                </button>
-            </article>
-            <div v-if="showRemaining" class="flex flex-col mt-5 gap-5">
-                <demon
-                    v-for="(demon, i) in remainingDemons"
-                    :key="i"
-                    :demon="demon"
-                    :active="false"
-                    :currentPercent="0"
-                    :percent="currentPercent + i + 1"
-                    :animate="false"
-                />
-            </div>
-            <!-- spacing -->
-            <div class="mb-64"></div>
-        </div>
-    </div>
-    <give-up-modal :show="showGiveUpModal" @close="showGiveUpModal = false" @give-up="giveUp" />
-    <save-modal :show="showSaveModal" @close="onSaveModalClose" @save="save" />
-    <modal :cancelable="true" :show="showAboutModal" @close="showAboutModal = false">
-        <div class="max-w-xl bg-white rounded-lg p-5">
-            <header>
-                <h2 class="text-2xl">About</h2>
-            </header>
-            <section>
-                <p>
-                    The Extreme Demon Roulette is a challenge where you must go through as many
-                    demons as possible, with the challenge ending when you get 100% or give up.
-                </p>
-                <p>
-                    Idea by
-                    <a href="https://youtu.be/nv_9FkfGRsc" class="text-blue-500 hover:underline"
-                        >npesta</a
-                    >, website by
-                    <a href="https://github.com/matcool/" class="text-blue-500 hover:underline"
-                        >me :)</a
+                    Extreme Demon Roulette
+                </h1>
+                <div class="flex mt-5 mx-3 justify-between items-center">
+                    <div class="flex flex-col text-gray-800 dark:text-gray-300">
+                        <label>
+                            <input type="checkbox" v-model="selectedLists.main" />
+                            Main list
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="selectedLists.extended" />
+                            Extended list
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="selectedLists.legacy" />
+                            Legacy list
+                        </label>
+                    </div>
+                    <div class="flex">
+                        <button
+                            @click="showSaveModal = true"
+                            class="text-white rounded px-4 py-2 bg-blue-500 hover:bg-blue-600 mr-2"
+                        >
+                            Save
+                        </button>
+                        <button
+                            @click="start()"
+                            class="text-white rounded px-4 py-2"
+                            :class="{
+                                'bg-green-500 hover:bg-green-600': !playing,
+                                'bg-red-500 hover:bg-red-600': playing,
+                                'opacity-60 cursor-not-allowed': fetching,
+                            }"
+                            :disabled="fetching"
+                        >
+                            {{ playing ? 'Restart' : 'Start' }}
+                        </button>
+                    </div>
+                </div>
+                <!-- TODO: switch gap to my-x -->
+                <div class="flex flex-col items-center w-screen max-w-7xl gap-5 mt-10">
+                    <demon
+                        v-for="(demon, i) in currentDemons"
+                        :key="i"
+                        :demon="demon"
+                        :active="playing && i === currentDemon"
+                        :currentPercent="currentPercent"
+                        :percent="percents[i]"
+                        @done="demonDone"
+                        @give-up="showGiveUpModal = true"
+                    />
+                </div>
+                <article
+                    v-if="showResults"
+                    class="flex flex-col items-center mt-5 p-5 shadow-lg w-full"
+                >
+                    <h2 class="text-3xl font-medium text-gray-800 dark:text-gray-200">Results</h2>
+                    <section class="text-xl mt-4 text-center dark:text-gray-200">
+                        <p>Number of demons: {{ percents.length }}</p>
+                        <p>Highest percent: {{ currentPercent - 1 }}%</p>
+                    </section>
+                    <button
+                        @click="showRemaining = true"
+                        v-if="currentPercent < 100"
+                        class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
                     >
-                </p>
-            </section>
-            <section class="pt-4">
-                <label>
-                    <input type="checkbox" v-model="darkMode" />
-                    Dark mode
-                </label>
-            </section>
+                        Show remaining demons
+                    </button>
+                </article>
+                <div v-if="showRemaining" class="flex flex-col mt-5 gap-5">
+                    <demon
+                        v-for="(demon, i) in remainingDemons"
+                        :key="i"
+                        :demon="demon"
+                        :active="false"
+                        :currentPercent="0"
+                        :percent="currentPercent + i + 1"
+                        :animate="false"
+                    />
+                </div>
+                <!-- spacing -->
+                <div class="mb-64"></div>
+            </div>
         </div>
-    </modal>
+        <give-up-modal :show="showGiveUpModal" @close="showGiveUpModal = false" @give-up="giveUp" />
+        <save-modal :show="showSaveModal" @close="onSaveModalClose" @save="save" />
+        <modal :cancelable="true" :show="showAboutModal" @close="showAboutModal = false">
+            <div class="max-w-xl bg-white dark:bg-plain-gray dark:text-gray-200 rounded-lg p-5">
+                <header>
+                    <h2 class="text-2xl">About</h2>
+                </header>
+                <section>
+                    <p>
+                        The Extreme Demon Roulette is a challenge where you must go through as many
+                        demons as possible, with the challenge ending when you get 100% or give up.
+                    </p>
+                    <p>
+                        Idea by
+                        <a href="https://youtu.be/nv_9FkfGRsc" class="text-blue-500 hover:underline"
+                            >npesta</a
+                        >, website by
+                        <a href="https://github.com/matcool/" class="text-blue-500 hover:underline"
+                            >me :)</a
+                        >
+                    </p>
+                </section>
+                <section class="pt-4">
+                    <label>
+                        <input type="checkbox" v-model="darkMode" />
+                        Dark mode
+                    </label>
+                </section>
+            </div>
+        </modal>
+    </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, onUnmounted } from 'vue';
+import { defineComponent, reactive, ref, computed, onUnmounted, watchEffect } from 'vue';
 import Demon from './components/Demon.vue';
 import Modal from './components/Modal.vue';
 import SaveModal from './components/SaveModal.vue';
@@ -279,8 +282,11 @@ export default defineComponent({
         }
 
         const showAboutModal = ref(false);
-        // does nothing for now
-        const darkMode = ref(false);
+        // copy pasted from https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+        const darkMode = ref(localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches));
+        watchEffect(() => {
+            localStorage.setItem('theme', darkMode.value ? 'dark' : 'light');
+        });
 
         return {
             demons,

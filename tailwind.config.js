@@ -5,8 +5,19 @@ module.exports = {
             cursor: {
                 help: 'help',
             },
+            zIndex: {
+                '-10': '-10',
+            },
+            colors: {
+                'plain-gray': {
+                    light: '#252728',
+                    DEFAULT: '#1e2021',
+                    dark: '#171819',
+                }
+            }
         },
     },
+    darkMode: 'class',
     variants: {
         extend: {
             cursor: ['hover'],

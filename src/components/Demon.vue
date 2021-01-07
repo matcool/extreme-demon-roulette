@@ -18,11 +18,15 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <header class="text-xl md:text-3xl font-medium text-gray-900 hover:underline">
+                    <header
+                        class="text-xl md:text-3xl font-medium text-gray-900 dark:text-gray-200 hover:underline"
+                    >
                         #{{ demon.position }} - {{ demon.name }}
                     </header>
                 </a>
-                <section class="text-lg italic text-gray-700">by {{ demon.creator }}</section>
+                <section class="text-lg italic text-gray-700 dark:text-gray-200">
+                    by {{ demon.creator }}
+                </section>
             </div>
             <div v-if="active && demon.levelID">
                 <div
@@ -32,13 +36,15 @@
                     <copy-icon size="1.1x"></copy-icon>
                 </div>
             </div>
-            <span v-if="percent" class="ml-3 mt-0.5 text-gray-500 text-2xl">{{ percent }}%</span>
+            <span v-if="percent" class="ml-3 mt-0.5 text-gray-500 dark:text-gray-400 text-2xl"
+                >{{ percent }}%</span
+            >
         </div>
         <div v-if="active" class="flex md:flex-grow justify-center md:justify-end mt-4 md:mt-0">
             <div class="flex flex-col w-full md:w-auto">
                 <input
                     type="number"
-                    class="border rounded border-gray-200 shadow-inner p-2"
+                    class="border rounded border-gray-200 dark:border-gray-600 dark:text-gray-100 shadow-inner p-2 dark:bg-plain-gray-light"
                     :placeholder="`Atleast ${currentPercent}%`"
                     v-model="iptPercent"
                 />
