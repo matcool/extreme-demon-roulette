@@ -45,7 +45,7 @@
                 <input
                     type="number"
                     class="border rounded border-gray-200 dark:border-gray-600 dark:text-gray-100 shadow-inner p-2 dark:bg-plain-gray-light"
-                    :placeholder="`Atleast ${currentPercent}%`"
+                    :placeholder="`At least ${currentPercent}%`"
                     v-model="iptPercent"
                 />
                 <div class="flex justify-between mt-5">
