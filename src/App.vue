@@ -157,7 +157,7 @@ export default defineComponent({
             limit: number = 100
         ): Promise<SimplifiedDemon[]> {
             const response = await fetch(
-                `https://pointercrate.com/api/v1/demons/?limit=${limit}&after=${after}`
+                `https://pointercrate.com/api/v2/demons/listed/?limit=${limit}&after=${after}`
             );
             if (response.ok) {
                 return (await response.json()).map(simplifyDemon);
