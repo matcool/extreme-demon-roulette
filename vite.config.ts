@@ -1,7 +1,10 @@
-import { UserConfig } from 'vite';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
-export default {
-    plugins: [],
-    assetsDir: 'assets',
-    base: './'
-} as UserConfig;
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [vue()],
+    build: {
+        assetsDir: 'assets',
+    },
+});
