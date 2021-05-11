@@ -15,7 +15,7 @@
         "file-saver": "^2.0.5",
         "tailwindcss": "compat",
         "vue": "^3.0.4",
-        "lodash": "4.17.21"
+        "lodash": "^4.17.21"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",
