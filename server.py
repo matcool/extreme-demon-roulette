@@ -16,7 +16,7 @@ last_update = None
 
 async def get_demon_list(after: int=0, limit: int=100):
     async with ClientSession() as session:
-        async with session.get(f'https://pointercrate.com/api/v1/demons/?limit={limit}&after={after}') as resp:
+        async with session.get(f'https://gdchallengelist.com/api/v1/demons/?limit={limit}&after={after}') as resp:
             if resp.status != 200: return
             data = await resp.json()
             return list(map(lambda demon: {
@@ -73,7 +73,7 @@ app.add_routes([
 ])
 
 cors = aiohttp_cors.setup(app, defaults={
-    # 'https://matcool.github.io/extreme-demon-roulette/': aiohttp_cors.ResourceOptions(allow_methods=['GET']),
+    # 'https://ifoodstampz.github.io/challenge-roulette/': aiohttp_cors.ResourceOptions(allow_methods=['GET']),
     '*': aiohttp_cors.ResourceOptions(allow_credentials=True, expose_headers="*", allow_headers="*")
 })
 

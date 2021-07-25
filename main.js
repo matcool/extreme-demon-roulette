@@ -24,7 +24,7 @@ function getDemonHTML(demon, currentPercent = 1, animation = 'fadeInUpBig') {
             </figure>
         </div>
         <div class="column">
-            <a href="https://pointercrate.com/demonlist/${demon.position}/"><h1 class="title" id="current-title">#${demon.position} - ${demon.name}</h1></a>
+            <a href="https://gdchallengelist.com/demonlist/${demon.position}/"><h1 class="title" id="current-title">#${demon.position} - ${demon.name}</h1></a>
             <h2 class="subtitle"><i>by ${demon.publisher}</i></h2>
         </div>
         <div id="temp-column" class="column is-narrow">
